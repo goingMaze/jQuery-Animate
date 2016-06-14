@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+
+		<style type="text/css">
+			ul#nav {
+				list-style: none;
+				margin: 10px 0;
+				padding: 0;
+				position: absolute;
+				bottom: 0;
+				right: 0;
+			}
+			
+			ul#nav li {
+				float: left;
+				width: 30px;
+			}
+			
+			ul#nav a {
+				text-decoration: none;
+				padding: 5px;
+			}
+			
+			ul#nav a:active {
+				background-color: #1AB394;
+			}
+			
+			.container {
+				position: relative;
+				height: 250px;
+				width: 400px;
+				border: 1px solid #CC5965;
+				overflow: hidden;
+			}
+			
+			.slide-container {
+				position: absolute;
+				top: 0;
+				left: 0;
+			}
+			
+			.slides {
+				float: right;
+			}
+			
+			.slide-text {
+				display: none;
+				font-size: 18px;
+			}
+			
+			img {
+				border: 0;
+			}
+			
+			.textStrip {
+				top: 0;
+				display: block;
+				position: absolute;
+				left: -400px;
+				padding: 5px;
+				background: #333333;
+				opacity: 9;
+				color: #FFFFFF;
+				width: 100%;
+			}
+		</style>
+	</head>
+
+	<body>
+		<h1>a new Album</h1>
+		<div class="container">
+			
+		</div>
+
+		<script src="../js/jquery-2.1.1.min.js" type="text/javascript" charset="utf-8"></script>
+
+		<script type="text/javascript">
+			var imgArray = ['../img/1.jpg', '../img/2.jpg', '../img/3.jpg'];
+			var textArray = ['如花1', '如花2', '如花3'];
+			var linkArray = ['http://www.163.com', 'http://www.126.com', 'http://www.139.com'];
+
+			$('.container').append("<div class='slide-container'></div>");
+			$('.slide-container').after("<ul id='nav' class='clearfix'></ul>");
+			for (i = 0; i < imgArray.length; i++) {
+				var slideNum = i + 1;
+				$('#nav').append("<li><a href='#' rel='" + slideNum + "'>" + slideNum + "</a></li>");
+				var slideInfo = "<div class='slide-image" + slideNum + " slides'>";
+				slideInfo += "<div class='slide-text'>" + textArray[i] + "</div>";
+				slideInfo += "<img src='" + imgArray[i] + "' /></div>";
+				$('.slide-container').append(slideInfo);
+			}
+
+			var slideTotal = imgArray.length;
+			var slideWidth = 400;
+			var slideContainerWidth = slideWidth * slideTotal;
+
+			$('.slide-container').css('width', slideContainerWidth);
+
+			$('#nav li a').bind('click', function() {
+				$('#nav li a').removeClass('active');
+				$(this).addClass('active');
+				$('.slide-text').css({
+					'top': '-100px',
+					'right': '0px'
+				});
+
+				$('.slide-text').stop();
+				$('.slide-text').clearQueue();
+
+				var active = $('#nav li a.active').attr('rel') - 1;
+				var slideNum = $('#nav li a.active').attr('rel');
+				var slidePos = active * slideWidth;
+
+				$('.slide-container').animate({
+					left: -slidePos
+				}, 1000, function() {
+					$('.slide-image' + slideNum + ' .slide-text').addClass('textStrip').animate({
+						top: 0,
+						left: slidePos,
+						right: 0
+					}, 1000, function() {
+						$('.slide-text').delay(5000).animate({
+							top: -100
+						}, 1000);
+					});
+				});
+			});
+		</script>
+	</body>
+
+</html>
